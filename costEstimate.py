@@ -148,7 +148,7 @@ def minCostForProgram(timeParams, timeLimit):
     # print(costs[minIndex])
     # print(times[minIndex].astimezone())
     return {
-        "time": times[minIndex].astimezone(),
+        "time": times[minIndex].astimezone().isoformat(),
         "gridCost": f"{minCost[0]} €",
         "solarCost": f"{minCost[1]} €",
         "totalCost": f"{minCost[2]} €",
@@ -161,12 +161,13 @@ def minCostForProgram(timeParams, timeLimit):
 @app.route("/")
 def hello_world():
     # return "x"
-    result = {}
+    result = []
     for timeLimit in [targetTime]:
-        result[str(timeLimit)] = {}
+        current = {}
         for program, timeParams in dbTimes.items():
             # print(program)
-            result[str(timeLimit)][program] = minCostForProgram(timeParams, timeLimit)
+            current[program] = minCostForProgram(timeParams, timeLimit)
+        result.append({"targetTime": timeLimit.isoformat(), "bestTimes": current})
 
     return result
 
